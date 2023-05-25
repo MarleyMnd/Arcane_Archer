@@ -1,15 +1,13 @@
-# This code was created by CHARTIER Max, MENARD Marley, BORDEL Tristan, AJROUD Hawa, Leanpenhchakrith CHEA
-# This is the main of our code, it contains all the loops that make the game playable and all the images needed to make
+#This code was created by CHARTIER Max, MENARD Marley, BORDEL Tristan, Hawa, Rith (nom de famille!)
+# This is the main of our code, it countains all the loops that make the game playable and all the images needed to make
 # it as enjoyable as possible. We used the library pycharm to develop our game, because it is known as an easy way
-# to access the 2D world from Python. All code bellow have a role in the good functioning of our game, and it will all
+# to access the 2D world from Python. All code bellow plays a part in the good functioning of our game and it will all
 # be explained.
 
-# Here in the first few lines we import all the libraries we will need, random to generate random numbers, pygame,
-# sys to be able to quit the loops, math which will play a really important part in the creating of gravity and finally
-# the importation of our own created GIF_Button_classes.py code.
-
-# Library and files importation
-from GIF_Button_classes import Flower, Zombie, Spider, Bee, Button
+# Here in the first few lines we import all the libraries we will need, random to generate random numbers, pygame to use
+# pygame, sys to be able to quit the loops, math which will play a really important part in the creating of gravity and
+# finally the importation of our own created GIF_animation.py code.
+from GIF_animation import Flower, Zombie, Spider, Bee
 import random
 import pygame
 import sys
@@ -25,17 +23,89 @@ image = pygame.image.load(r"Images/Player_image1.gif")
 image = pygame.transform.scale(image, (110, 150))
 arrow_image = pygame.image.load("Images/ball2.png")
 
-# The difficulty level and the number of lives is defined here so that we can use them after.
+# The difficulty level and the number of lifes is defined here so that we can use thel after.
 difficulty = 1
-lives = 3
+lifes = 3
 
 # Also an important thing in pygame, to have a display screen we need to initialize it, therefor we need to create
-# two variable, width and height that will be taken into the creation of the screen for its size. The name of the
+# two variable, width and height that will be taken into the creation of the screen for its size. The name of the 
 # window will be ARCANE ARCHER
 screen_width = 1200
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("ARCANE ARCHER")
+
+
+# Definition of our first class!!
+class Button:
+    """To create a button."""
+
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+        """Initializes the parameters of the button (image, position, text, font, color and color when the mouse is
+        matching the position)."""
+
+        super().__init__()
+
+        # The image for the background of the button:
+        self.image = image
+
+        # The coordinates of the button:
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+
+        # Determine the font which will be used for the text:
+        self.font = font
+
+        # Determine the natural color of the text
+        self.base_color = base_color
+        # Determine the modified color of the text when the coordinates of the mouse will match the coordinates
+        # of the button:
+        self.hovering_color = hovering_color
+
+        # Text to insert in the button:
+        self.text_input = text_input
+        # Apply the color to the text:
+        self.text = self.font.render(self.text_input, True, self.base_color)
+
+        # If we don't want to insert an image in the button (only clickable text):
+        if self.image is None:
+            self.image = self.text
+
+        # Create the rectangle around the image with four parameters : the coordinates x and y, the width and the
+        # height.
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+    def check_for_input(self, position):
+        """Returns True if the user clicked on the rectangle covering the surface of the button.
+        In brief, allows two make the connection between the button and the linked menu."""
+
+        # The function is called once the 'click' of the user has already been detected.
+        # If the coordinates of the 'click' are in the surface covered by the button, it sends the user to the game,
+        # the game mode menu, or closes the library and the game.
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
+                                                                                          self.rect.bottom):
+            return True
+        return False
+
+    def change_button_color(self, position):
+        """Changes the color of the text if the mouse is over the button."""
+
+        # Either the coordinates of the button's rectangle match the position of the mouse.
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
+                                                                                          self.rect.bottom):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        # Either it doesn't and the color of the text remains the same.
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
+
+    def update(self, surface):
+        """Updates the displayed button."""
+        # If an image is provided :
+        if self.image is not None:
+            surface.blit(self.image, self.rect)
+        # Update the text
+        surface.blit(self.text, self.text_rect)
 
 
 def create_sprites_flower(coordinates_flower):
@@ -101,21 +171,21 @@ def game_mode():
         screen.blit(game_mode_text, game_mode_rect_text)
 
         # Create the 'EASY' game mode button
-        game_mode_easy_button = Button(the_image=None, pos=(400, 300), text_input="EASY",
-                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
+        game_mode_easy_button = Button(image=None, pos=(400, 300), text_input="EASY",
+                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
                                        base_color=base_color_easy, hovering_color="#76c893")
         # Create the 'MEDIUM' game mode button
-        game_mode_medium_button = Button(the_image=None, pos=(600, 300), text_input="MEDIUM",
-                                         font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
+        game_mode_medium_button = Button(image=None, pos=(600, 300), text_input="MEDIUM",
+                                         font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
                                          base_color=base_color_medium, hovering_color="#76c893")
         # Create the 'HARD' game mode button
-        game_mode_hard_button = Button(the_image=None, pos=(800, 300), text_input="HARD",
-                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
+        game_mode_hard_button = Button(image=None, pos=(800, 300), text_input="HARD",
+                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
                                        base_color=base_color_hard, hovering_color="#76c893")
 
         # Create the 'BACK' button
-        game_mode_back_button = Button(the_image=None, pos=(60, 30), text_input="BACK",
-                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
+        game_mode_back_button = Button(image=None, pos=(60, 30), text_input="BACK",
+                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
                                        base_color="#d7fcd4", hovering_color="White")
 
         # If the mouse of the player is on a button, the color of the text changes
@@ -174,13 +244,13 @@ def pause_state():
         pause_mouse_pos = pygame.mouse.get_pos()
 
         # Create the 'resume' button to pause the game
-        resume_button = Button(the_image=None, pos=(55, 60), text_input="RESUME",
-                               font=pygame.font.Font("assets/Font_Pixeloid.ttf", 20),
+        resume_button = Button(image=None, pos=(55, 60), text_input="RESUME",
+                               font=pygame.font.Font("assets/Font_Gameplay.ttf", 20),
                                base_color="White",
                                hovering_color="Black")
 
-        main_menu_button = Button(the_image=None, pos=(75, 100), text_input="MAIN MENU",
-                                  font=pygame.font.Font("assets/Font_Pixeloid.ttf", 20),
+        main_menu_button = Button(image=None, pos=(70, 100), text_input="MAIN MENU",
+                                  font=pygame.font.Font("assets/Font_Gameplay.ttf", 20),
                                   base_color="White",
                                   hovering_color="Black")
 
@@ -209,8 +279,9 @@ def pause_state():
 
 def play():
     """Game loop for the game."""
-    # Here we redefine the variables as global, to be able to use them anywhere, in every loop
-    global lives
+    # Here we redfine the variables as global, to be able to use them anywhere, in every loop
+    global lifes
+    lifes = 3
     global difficulty
     # The direction will correspond to the way the character is oriented, game pause is pretty self-explanatory and jump
     # just tell us the character is not jumping
@@ -218,9 +289,9 @@ def play():
     direction = True
     jump = False
     level = 1
-    # Level 1 will correspond to the first level you face, the coordinates of the character are given, so that you
-    # appear on the screen, and same for the flower and the spider that will appear randomly which will be your
-    # enemies.
+    # Level 1 will correspond to the first level you face, the coordinates of the character are given, so that you 
+    # appear on the screen, and same for the flower and the spider that will appear randomly which will be your 
+    # enemies. 
     if level == 1:
         x = 50
         y = 450
@@ -232,7 +303,8 @@ def play():
             level += 1
         # if you go past the edge of the screen you will change levels
         moving_sprites_flower, moving_sprites_spider = create_sprites_flower(coordinates_flower), \
-            create_sprites_spider(coordinates_spider)
+                                                       create_sprites_spider(coordinates_spider)
+
 
     # creates the moving sprites
     ###################################################
@@ -241,7 +313,7 @@ def play():
     blow_plant = pygame.image.load(r'Images/shoot_plant.png')
     acid_spider = pygame.image.load(r'Images/acid_spider.png')
     fire_plant = False
-    # This condition makes the plant shoot in the direction of the character, it would be too easy if she kept
+    # This condition makes the plant shoot in the direction of the character, it would be too easy if she kept 
     # shooting towards one side
     if shoot_plant > x:
         shoot_plant += 5
@@ -273,9 +345,9 @@ def play():
 
         while not game_paused:
             key_pressed_is = pygame.key.get_pressed()
-            if level == 2 or level == 5 or level == 8:
+            if level == 2 or level==5 or level == 8:
                 if level == 2:
-                    display = 2
+                    display =2
                 if level == 5:
                     display = 3
                 if level == 8:
@@ -283,7 +355,7 @@ def play():
                 # Fill the screen with black color
                 screen.fill((0, 0, 0))
                 # Render the text
-                font = pygame.font.Font("assets/Font_Pixeloid.ttf", 120)  # Increased font size to 64
+                font = pygame.font.Font(None, 120)  # Increased font size to 64
                 text_color = (255, 255, 255)  # White
                 text = font.render("NEXT LEVEL", True, text_color)
                 text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2))
@@ -295,7 +367,7 @@ def play():
                 time.sleep(1.5)
                 # Increment the level
                 level += 1
-
+## different levels creation. They all work in the same way but with the random creation of enemies it makes them different.
             if level == 3 or level == 6 or level == 9:
                 x = 50
                 y = 450
@@ -307,9 +379,9 @@ def play():
                 coordinates_spider = (x_im_spider, 0)
                 # if you go past the edge of the screen you will change levels
                 moving_sprites_flower, moving_sprites_spider = create_sprites_flower(coordinates_flower), \
-                    create_sprites_spider(coordinates_spider)
-                level += 1
-
+                                                               create_sprites_spider(coordinates_spider)
+                level +=1
+          ## keys to move the character
             if key_pressed_is[pygame.K_q]:
                 x -= 3
                 direction = False
@@ -317,14 +389,14 @@ def play():
                 x += 3
                 direction = True
             if x > 1200:
-                level += 1
+                level +=1
                 x = 10
-
+            ##shoot arrow 
             if arrow_fired:
                 arrow_x += arrow_velocity_x
                 arrow_y += arrow_velocity_y
                 arrow_velocity_y += gravity
-
+            ## check the coordinates of the arrows to in case delete it 
             if arrow_y + arrow_image.get_height() > 750:
                 arrow_fired = False
                 arrow_velocity_x = 0
@@ -334,6 +406,7 @@ def play():
                 arrow_velocity_x = 0
                 arrow_velocity_y = 0
 
+            # Draw arrow if fired
             if not jump:
                 # if space bar is pressed
                 if key_pressed_is[pygame.K_SPACE]:
@@ -341,9 +414,9 @@ def play():
                     jump = True
             if jump:
                 # calculate force (F). F = 1 / 2 * mass * velocity ^ 2.
-                force = (1 / 4) * mass * (vel ** 2)
+                Force = (1 / 4) * mass * (vel ** 2)
                 # change in the y co-ordinate
-                y -= force
+                y -= Force
                 # decreasing velocity while going up and become negative while coming down
                 vel = vel - 1
 
@@ -362,7 +435,8 @@ def play():
             # - Screen color
             screen.blit(background_image, (0, 0))
 
-            # Draw the arrow if it is fired
+
+
             if arrow_fired:
                 screen.blit(pygame.transform.rotate(arrow_image, math.degrees(-arrow_angle)), (arrow_x, arrow_y))
                 if x < arrow_x:
@@ -376,7 +450,7 @@ def play():
             # print(play_mouse_pos) ##########################
 
             # Create the '||' button to go back to pause the game
-            play_back_button = Button(the_image=None, pos=(20, 20), text_input="| |",
+            play_back_button = Button(image=None, pos=(20, 20), text_input="| |",
                                       font=pygame.font.Font("assets/Font_Gameplay.ttf", 20), base_color="White",
                                       hovering_color="Black")
 
@@ -394,6 +468,7 @@ def play():
 
             ################################################
             time_shoot_enemy += 1
+            ##enemies shoot once in every some time, changing with the difficulty
             if difficulty == 1:
                 if round(time_shoot_enemy) % 500 == 0:
                     fire_plant = True
@@ -409,52 +484,54 @@ def play():
                     fire_plant = True
                 if round(time_shoot_enemy) % 300 == 0:
                     fire_spider = True
-            if lives <= 0:
-                font = pygame.font.SysFont("assets/Font_Pixeloid.ttf", 100)
+                   ##game over screen
+            if lifes <= 0:
+                font = pygame.font.SysFont(None, 100)
                 img = font.render('GAME OVER', True, (255, 255, 90))
                 screen.blit(img, (400, 300))
-
-            font = pygame.font.SysFont("assets/Font_Pixeloid.ttf", 30)
+            ## display of all the additional elements such as the lifes and others
+            font = pygame.font.SysFont(None, 30)
             img = font.render('Lives =', True, (255, 255, 255))
             screen.blit(img, (50, 12))
-            img = font.render(str(lives), True, (255, 255, 255))
+            img = font.render(str(lifes), 1, (255, 255, 255))
             screen.blit(img, (130, 12))
             text = font.render(f"LEVEL: {display}", True, (255, 255, 255))  # White text
             text_rect = text.get_rect()
             text_rect.centerx = 1200 // 2  # Center horizontally
             text_rect.y = 10  # Position at the top
             screen.blit(text, text_rect)
-            # Draw shot strength meter
+            # Draw shot strength meter that shows the strengh
             pygame.draw.rect(screen, (255, 255, 255), (1175, 25, 10, 100))
             meter_height = int(shot_strength / shot_strength_scale * 160)
             pygame.draw.rect(screen, (181, 154, 84), (1175, 125 - meter_height, 10, meter_height))
 
+            ## fire of the plant 
             if fire_plant:
-                shoot_plant -= 5
+                shoot_plant -=5
                 screen.blit(blow_plant, (shoot_plant, y_plant + 35))
-
+            ##verifies the coordinates to in case erase it
             if shoot_plant < 0 or shoot_plant > 1200:
                 fire_plant = False
                 shoot_plant = x_plant
             if (x - 30 < shoot_plant < x + 30) and (y - 30 < y_plant < y + 30):
-                if lives == 0:
-                    lives = 0
+                if lifes ==0:
+                    lifes=0
                 else:
-                    lives -= 1
+                    lifes -= 1
                 shoot_plant = x_plant
                 fire_plant = False
 
             ####################################
-
+            ##Same for the spider, creation of all the condition to remove one life from the character
             if fire_spider:
                 y_spider += 5
                 screen.blit(acid_spider, (x_im_spider, y_spider))
 
             if x - 20 < x_im_spider < x + 20 and y - 20 < y_spider < y + 20:
-                if lives == 0:
-                    lives = 0
+                if lifes == 0:
+                    lifes = 0
                 else:
-                    lives -= 1
+                    lifes -= 1
                 y_spider = 0
                 fire_spider = False
 
@@ -476,6 +553,7 @@ def play():
                 moving_sprites_spider = create_sprites_spider(coordinates_spider)
 
                 ##################################################
+                ##loop with events
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN and not arrow_fired:
                     arrow_fired = True
@@ -527,22 +605,22 @@ def main_menu():
         menu_mouse_pos = pygame.mouse.get_pos()
 
         # Display the title of the menu
-        menu_text = pygame.font.Font("assets/Font_Pixeloid.ttf", 100).render("Main Menu", True, "#eae6e5")
+        menu_text = pygame.font.Font("assets/Font_SaintCarellClean.otf", 100).render("MAIN MENU", True, "#eae6e5")
         menu_rect_text = menu_text.get_rect(center=(600, 120))
         screen.blit(menu_text, menu_rect_text)
 
         # Create the 'PLAY' button
-        play_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 250),
-                             text_input="PLAY", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
-                             base_color="#d7fcd4", hovering_color="White")
+        play_button = Button(image=pygame.image.load("assets/button_background.png"), pos=(600, 250), text_input="PLAY",
+                             font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40), base_color="#d7fcd4",
+                             hovering_color="White")
         # Create the 'GAME_MODE' button
-        game_mode_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 400),
-                                  text_input="GAME MODE", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
+        game_mode_button = Button(image=pygame.image.load("assets/button_background.png"), pos=(600, 400),
+                                  text_input="GAME MODE", font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40),
                                   base_color="#d7fcd4", hovering_color="White")
         # Create the 'QUIT' button
-        quit_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 550),
-                             text_input="QUIT", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
-                             base_color="#d7fcd4", hovering_color="White")
+        quit_button = Button(image=pygame.image.load("assets/button_background.png"), pos=(600, 550), text_input="QUIT",
+                             font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40), base_color="#d7fcd4",
+                             hovering_color="White")
 
         # The color of the text displayed on the button changes if the mouse is on it
         for button in [play_button, game_mode_button, quit_button]:
