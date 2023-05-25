@@ -8,6 +8,7 @@
 # sys to be able to quit the loops, math which will play a really important part in the creating of gravity and finally
 # the importation of our own created GIF_Button_classes.py code.
 
+# Library and files importation
 from GIF_Button_classes import Flower, Zombie, Spider, Bee, Button
 import random
 import pygame
@@ -333,7 +334,6 @@ def play():
                 arrow_velocity_x = 0
                 arrow_velocity_y = 0
 
-            # Draw arrow if fired
             if not jump:
                 # if space bar is pressed
                 if key_pressed_is[pygame.K_SPACE]:
@@ -362,6 +362,7 @@ def play():
             # - Screen color
             screen.blit(background_image, (0, 0))
 
+            # Draw the arrow if it is fired
             if arrow_fired:
                 screen.blit(pygame.transform.rotate(arrow_image, math.degrees(-arrow_angle)), (arrow_x, arrow_y))
                 if x < arrow_x:
