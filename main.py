@@ -6,9 +6,9 @@
 
 # Here in the first few lines we import all the libraries we will need, random to generate random numbers, pygame,
 # sys to be able to quit the loops, math which will play a really important part in the creating of gravity and finally
-# the importation of our own created GIF_animation.py code.
+# the importation of our own created GIF_Button_classes.py code.
 
-from GIF_animation import Flower, Zombie, Spider, Bee
+from GIF_Button_classes import Flower, Zombie, Spider, Bee, Button
 import random
 import pygame
 import sys
@@ -35,78 +35,6 @@ screen_width = 1200
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("ARCANE ARCHER")
-
-
-# Definition of our first class!!
-class Button:
-    """To create a button."""
-
-    def __init__(self, the_image, pos, text_input, font, base_color, hovering_color):
-        """Initializes the parameters of the button (image, position, text, font, color and color when the mouse is
-        matching the position)."""
-
-        super().__init__()
-
-        # The image for the background of the button:
-        self.image = the_image
-
-        # The coordinates of the button:
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
-
-        # Determine the font which will be used for the text:
-        self.font = font
-
-        # Determine the natural color of the text
-        self.base_color = base_color
-        # Determine the modified color of the text when the coordinates of the mouse will match the coordinates
-        # of the button:
-        self.hovering_color = hovering_color
-
-        # Text to insert in the button:
-        self.text_input = text_input
-        # Apply the color to the text:
-        self.text = self.font.render(self.text_input, True, self.base_color)
-
-        # If we don't want to insert an image in the button (only clickable text):
-        if self.image is None:
-            self.image = self.text
-
-        # Create the rectangle around the image with four parameters : the coordinates x and y, the width and the
-        # height.
-        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
-        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
-
-    def check_for_input(self, position):
-        """Returns True if the user clicked on the rectangle covering the surface of the button.
-        In brief, allows two make the connection between the button and the linked menu."""
-
-        # The function is called once the 'click' of the user has already been detected.
-        # If the coordinates of the 'click' are in the surface covered by the button, it sends the user to the game,
-        # the game mode menu, or closes the library and the game.
-        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
-                                                                                          self.rect.bottom):
-            return True
-        return False
-
-    def change_button_color(self, position):
-        """Changes the color of the text if the mouse is over the button."""
-
-        # Either the coordinates of the button's rectangle match the position of the mouse.
-        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
-                                                                                          self.rect.bottom):
-            self.text = self.font.render(self.text_input, True, self.hovering_color)
-        # Either it doesn't and the color of the text remains the same.
-        else:
-            self.text = self.font.render(self.text_input, True, self.base_color)
-
-    def update(self, surface):
-        """Updates the displayed button."""
-        # If an image is provided :
-        if self.image is not None:
-            surface.blit(self.image, self.rect)
-        # Update the text
-        surface.blit(self.text, self.text_rect)
 
 
 def create_sprites_flower(coordinates_flower):
@@ -173,20 +101,20 @@ def game_mode():
 
         # Create the 'EASY' game mode button
         game_mode_easy_button = Button(the_image=None, pos=(400, 300), text_input="EASY",
-                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
+                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
                                        base_color=base_color_easy, hovering_color="#76c893")
         # Create the 'MEDIUM' game mode button
         game_mode_medium_button = Button(the_image=None, pos=(600, 300), text_input="MEDIUM",
-                                         font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
+                                         font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
                                          base_color=base_color_medium, hovering_color="#76c893")
         # Create the 'HARD' game mode button
         game_mode_hard_button = Button(the_image=None, pos=(800, 300), text_input="HARD",
-                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
+                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
                                        base_color=base_color_hard, hovering_color="#76c893")
 
         # Create the 'BACK' button
         game_mode_back_button = Button(the_image=None, pos=(60, 30), text_input="BACK",
-                                       font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 30),
+                                       font=pygame.font.Font("assets/Font_Pixeloid.ttf", 30),
                                        base_color="#d7fcd4", hovering_color="White")
 
         # If the mouse of the player is on a button, the color of the text changes
@@ -246,12 +174,12 @@ def pause_state():
 
         # Create the 'resume' button to pause the game
         resume_button = Button(the_image=None, pos=(55, 60), text_input="RESUME",
-                               font=pygame.font.Font("assets/Font_Gameplay.ttf", 20),
+                               font=pygame.font.Font("assets/Font_Pixeloid.ttf", 20),
                                base_color="White",
                                hovering_color="Black")
 
-        main_menu_button = Button(the_image=None, pos=(70, 100), text_input="MAIN MENU",
-                                  font=pygame.font.Font("assets/Font_Gameplay.ttf", 20),
+        main_menu_button = Button(the_image=None, pos=(75, 100), text_input="MAIN MENU",
+                                  font=pygame.font.Font("assets/Font_Pixeloid.ttf", 20),
                                   base_color="White",
                                   hovering_color="Black")
 
@@ -354,7 +282,7 @@ def play():
                 # Fill the screen with black color
                 screen.fill((0, 0, 0))
                 # Render the text
-                font = pygame.font.Font(None, 120)  # Increased font size to 64
+                font = pygame.font.Font("assets/Font_Pixeloid.ttf", 120)  # Increased font size to 64
                 text_color = (255, 255, 255)  # White
                 text = font.render("NEXT LEVEL", True, text_color)
                 text_rect = text.get_rect(center=(screen_width // 2, screen_height // 2))
@@ -481,11 +409,11 @@ def play():
                 if round(time_shoot_enemy) % 300 == 0:
                     fire_spider = True
             if lives <= 0:
-                font = pygame.font.SysFont(None, 100)
+                font = pygame.font.SysFont("assets/Font_Pixeloid.ttf", 100)
                 img = font.render('GAME OVER', True, (255, 255, 90))
                 screen.blit(img, (400, 300))
 
-            font = pygame.font.SysFont(None, 30)
+            font = pygame.font.SysFont("assets/Font_Pixeloid.ttf", 30)
             img = font.render('Lives =', True, (255, 255, 255))
             screen.blit(img, (50, 12))
             img = font.render(str(lives), True, (255, 255, 255))
@@ -598,21 +526,21 @@ def main_menu():
         menu_mouse_pos = pygame.mouse.get_pos()
 
         # Display the title of the menu
-        menu_text = pygame.font.Font("assets/Font_SaintCarellClean.otf", 100).render("MAIN MENU", True, "#eae6e5")
+        menu_text = pygame.font.Font("assets/Font_Pixeloid.ttf", 100).render("Main Menu", True, "#eae6e5")
         menu_rect_text = menu_text.get_rect(center=(600, 120))
         screen.blit(menu_text, menu_rect_text)
 
         # Create the 'PLAY' button
         play_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 250),
-                             text_input="PLAY", font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40),
+                             text_input="PLAY", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
                              base_color="#d7fcd4", hovering_color="White")
         # Create the 'GAME_MODE' button
         game_mode_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 400),
-                                  text_input="GAME MODE", font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40),
+                                  text_input="GAME MODE", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
                                   base_color="#d7fcd4", hovering_color="White")
         # Create the 'QUIT' button
         quit_button = Button(the_image=pygame.image.load("assets/button_background.png"), pos=(600, 550),
-                             text_input="QUIT", font=pygame.font.Font("assets/Font_SaintCarellClean.otf", 40),
+                             text_input="QUIT", font=pygame.font.Font("assets/Font_Pixeloid.ttf", 40),
                              base_color="#d7fcd4", hovering_color="White")
 
         # The color of the text displayed on the button changes if the mouse is on it

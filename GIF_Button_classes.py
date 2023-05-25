@@ -1,6 +1,78 @@
 import pygame
 
 
+# Definition of our first class!!
+class Button:
+    """To create a button."""
+
+    def __init__(self, the_image, pos, text_input, font, base_color, hovering_color):
+        """Initializes the parameters of the button (image, position, text, font, color and color when the mouse is
+        matching the position)."""
+
+        super().__init__()
+
+        # The image for the background of the button:
+        self.image = the_image
+
+        # The coordinates of the button:
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+
+        # Determine the font which will be used for the text:
+        self.font = font
+
+        # Determine the natural color of the text
+        self.base_color = base_color
+        # Determine the modified color of the text when the coordinates of the mouse will match the coordinates
+        # of the button:
+        self.hovering_color = hovering_color
+
+        # Text to insert in the button:
+        self.text_input = text_input
+        # Apply the color to the text:
+        self.text = self.font.render(self.text_input, True, self.base_color)
+
+        # If we don't want to insert an image in the button (only clickable text):
+        if self.image is None:
+            self.image = self.text
+
+        # Create the rectangle around the image with four parameters : the coordinates x and y, the width and the
+        # height.
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+    def check_for_input(self, position):
+        """Returns True if the user clicked on the rectangle covering the surface of the button.
+        In brief, allows two make the connection between the button and the linked menu."""
+
+        # The function is called once the 'click' of the user has already been detected.
+        # If the coordinates of the 'click' are in the surface covered by the button, it sends the user to the game,
+        # the game mode menu, or closes the library and the game.
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
+                                                                                          self.rect.bottom):
+            return True
+        return False
+
+    def change_button_color(self, position):
+        """Changes the color of the text if the mouse is over the button."""
+
+        # Either the coordinates of the button's rectangle match the position of the mouse.
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top,
+                                                                                          self.rect.bottom):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        # Either it doesn't and the color of the text remains the same.
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
+
+    def update(self, surface):
+        """Updates the displayed button."""
+        # If an image is provided :
+        if self.image is not None:
+            surface.blit(self.image, self.rect)
+        # Update the text
+        surface.blit(self.text, self.text_rect)
+
+
 # Flower class
 class Flower(pygame.sprite.Sprite):
     """To animate the flower."""
