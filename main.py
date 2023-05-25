@@ -8,7 +8,7 @@
 # sys to be able to quit the loops, math which will play a really important part in the creating of gravity and finally
 # the importation of our own created GIF_Button_classes.py code.
 
-# Library and files importation
+# Libraries and files importation
 from GIF_Button_classes import Flower, Zombie, Spider, Bee, Button
 import random
 import pygame
